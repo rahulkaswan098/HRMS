@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDPR Compliance Chatbot - NeuronIQ AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #141414; color: #ffffff; min-height: 100vh;
+            display: flex; flex-direction: column;
+        }
+        .navbar {
+            background: #141414; padding: 20px 4%; border-bottom: 1px solid #2a2a2a;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 1.5rem; color: #e50914; font-weight: 700; }
+        .btn-home {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .btn-home:hover { background: rgba(255, 255, 255, 0.2); }
+        .chat-container {
+            flex: 1; display: flex; flex-direction: column; max-width: 1200px;
+            width: 100%; margin: 0 auto; padding: 2rem 4%;
+        }
+        .chat-header { text-align: center; margin-bottom: 2rem; }
+        .chat-header h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .chat-header p { color: #808080; font-size: 1.1rem; }
+        .chat-messages {
+            flex: 1; background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 2rem; overflow-y: auto; min-height: 400px; max-height: 600px; margin-bottom: 1.5rem;
+        }
+        .message {
+            margin-bottom: 1.5rem; padding: 1.5rem; border-radius: 12px; line-height: 1.6;
+        }
+        .message.user {
+            background: rgba(229, 9, 20, 0.2); border: 1px solid #e50914; margin-left: 20%;
+        }
+        .message.bot {
+            background: #0a0a0a; border: 1px solid #2a2a2a; margin-right: 20%;
+        }
+        .message-label { font-weight: 700; margin-bottom: 0.5rem; color: #e50914; }
+        .message.bot .message-label { color: #46d369; }
+        .welcome-message { text-align: center; color: #808080; padding: 4rem 2rem; }
+        .welcome-message h3 { color: #ffffff; margin-bottom: 1rem; font-size: 1.5rem; }
+        .example-queries {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem; margin-top: 2rem;
+        }
+        .example-query {
+            background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3);
+            padding: 1rem; border-radius: 8px; cursor: pointer; transition: all 0.3s; text-align: center;
+        }
+        .example-query:hover {
+            background: rgba(229, 9, 20, 0.2); border-color: #e50914; transform: translateY(-2px);
+        }
+        .chat-input-area {
+            background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 1.5rem; display: flex; gap: 1rem;
+        }
+        .chat-input {
+            flex: 1; background: #0a0a0a; border: 2px solid #2a2a2a; border-radius: 8px;
+            padding: 1rem; color: white; font-size: 1rem; font-family: inherit; resize: none;
+        }
+        .chat-input:focus { outline: none; border-color: #e50914; }
+        .btn-send {
+            background: #e50914; border: none; color: white; padding: 1rem 2rem; border-radius: 8px;
+            cursor: pointer; font-weight: 700; font-size: 1rem; transition: all 0.3s;
+        }
+        .btn-send:hover { background: #f40612; }
+        .btn-send:disabled { opacity: 0.5; cursor: not-allowed; }
+        .loading {
+            display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%; border-top-color: white; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) {
+            .message.user { margin-left: 10%; }
+            .message.bot { margin-right: 10%; }
+            .chat-input-area { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🔒 GDPR Compliance Chatbot</h1>
+        <a href="/" class="btn-home">← Back to Home</a>
+    </nav>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <h2>GDPR & AI in HR Assistant</h2>
+            <p>Ask me anything about GDPR compliance, HR regulations, and AI ethics</p>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message">
+                <h3>👋 Welcome to the GDPR Chatbot!</h3>
+                <p>I'm here to help you understand GDPR compliance in HR and AI systems.</p>
+                <p>Based on official EU 2016/679 documentation and 2025 HR-AI guidelines.</p>
+                
+                <div class="example-queries">
+                    <div class="example-query" onclick="askExample(this.textContent)">
+                        What is GDPR Article 5?
+                    </div>
+                    <div class="example-query" onclick="askExample(this.textContent)">
+                        Can AI systems process employee data?
+                    </div>
+                    <div class="example-query" onclick="askExample(this.textContent)">
+                        What are the data protection principles?
+                    </div>
+                    <div class="example-query" onclick="askExample(this.textContent)">
+                        How to ensure GDPR compliance in recruitment?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <textarea id="chat-input" class="chat-input" placeholder="Ask your GDPR question here..." rows="3"
+                onkeypress="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+            <button id="send-btn" class="btn-send" onclick="sendMessage()">Send 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        var chatMessages = document.getElementById('chat-messages');
+        var chatInput = document.getElementById('chat-input');
+        var sendBtn = document.getElementById('send-btn');
+        var firstMessage = true;
+
+        function askExample(question) {
+            chatInput.value = question;
+            sendMessage();
+        }
+
+        function addMessage(text, sender) {
+            if (firstMessage) {
+                chatMessages.innerHTML = '';
+                firstMessage = false;
+            }
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            var label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = sender === 'user' ? '👤 You' : '🤖 GDPR Assistant';
+            var content = document.createElement('div');
+            content.textContent = text;
+            messageDiv.appendChild(label);
+            messageDiv.appendChild(content);
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showLoading() {
+            var loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot';
+            loadingDiv.id = 'loading-message';
+            var label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = '🤖 GDPR Assistant';
+            var content = document.createElement('div');
+            content.innerHTML = '<span class="loading"></span> Analyzing GDPR documentation...';
+            loadingDiv.appendChild(label);
+            loadingDiv.appendChild(content);
+            chatMessages.appendChild(loadingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeLoading() {
+            var loading = document.getElementById('loading-message');
+            if (loading) loading.remove();
+        }
+
+        function sendMessage() {
+            var message = chatInput.value.trim();
+            if (!message) return;
+            addMessage(message, 'user');
+            chatInput.value = '';
+            sendBtn.disabled = true;
+            showLoading();
+            fetch('/gdpr-chatbot/ask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ question: message })
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                removeLoading();
+                sendBtn.disabled = false;
+                if (data.error) {
+                    addMessage('Error: ' + data.error, 'bot');
+                } else {
+                    addMessage(data.answer, 'bot');
+                }
+                chatInput.focus();
+            })
+            .catch(function(error) {
+                removeLoading();
+                sendBtn.disabled = false;
+                addMessage('Error: ' + error.message, 'bot');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Description Creator - NeuronIQ AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #141414; color: #ffffff; min-height: 100vh;
+        }
+        .navbar {
+            background: #141414; padding: 20px 4%; border-bottom: 1px solid #2a2a2a;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 1.5rem; color: #e50914; font-weight: 700; }
+        .btn-home {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .btn-home:hover { background: rgba(255, 255, 255, 0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 4%; }
+        .hero-section { text-align: center; margin-bottom: 3rem; }
+        .hero-section h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .hero-section p { color: #808080; font-size: 1.1rem; }
+        .form-card {
+            background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 2.5rem; margin-bottom: 2rem;
+        }
+        .section-title { font-size: 1.5rem; font-weight: 700; color: #e50914; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label { display: block; font-weight: 600; color: #ffffff; margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .form-input, .form-textarea {
+            width: 100%; padding: 1rem; background: #0a0a0a; border: 2px solid #2a2a2a;
+            border-radius: 8px; color: #ffffff; font-size: 1rem; font-family: inherit; transition: all 0.3s;
+        }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: #e50914; }
+        .form-textarea { min-height: 120px; resize: vertical; }
+        .form-row {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;
+        }
+        .btn-generate {
+            background: #e50914; border: none; color: white; padding: 1.25rem 3rem;
+            font-size: 1.2rem; font-weight: 700; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s; width: 100%; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-generate:hover {
+            background: #f40612; transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+        }
+        .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .result-section { display: none; margin-top: 2rem; }
+        .result-section.active { display: block; }
+        .result-card {
+            background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 12px; padding: 2.5rem;
+        }
+        .result-title { font-size: 2rem; color: #e50914; margin-bottom: 2rem; text-align: center; }
+        .jd-section {
+            margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #2a2a2a;
+        }
+        .jd-section:last-child { border-bottom: none; }
+        .jd-section h3 { color: #e50914; font-size: 1.3rem; margin-bottom: 1rem; }
+        .jd-section ul { list-style: none; padding-left: 0; }
+        .jd-section li { padding: 0.5rem 0; padding-left: 1.5rem; position: relative; }
+        .jd-section li::before { content: '▪'; position: absolute; left: 0; color: #46d369; }
+        .result-actions { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        .btn-action {
+            background: rgba(70, 211, 105, 0.2); border: 1px solid #46d369; color: white;
+            padding: 1rem 2rem; border-radius: 8px; cursor: pointer; font-weight: 600;
+            transition: all 0.3s; flex: 1; min-width: 200px;
+        }
+        .btn-action:hover { background: rgba(70, 211, 105, 0.3); }
+        .loading-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.95); z-index: 9999; align-items: center; justify-content: center;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-content { text-align: center; }
+        .spinner {
+            width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #e50914; border-radius: 50%; animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 1.5rem; font-weight: 600; }
+        @media (max-width: 768px) {
+            .form-card { padding: 1.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>📝 Job Description Creator</h1>
+        <a href="/" class="btn-home">← Back to Home</a>
+    </nav>
+
+    <div class="container">
+        <div class="hero-section">
+            <h2>AI-Powered JD Generator</h2>
+            <p>Create professional job descriptions tailored to NeuronIQ AI's culture</p>
+        </div>
+
+        <form id="jd-form">
+            <div class="form-card">
+                <h3 class="section-title">📋 Basic Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Role Title *</label>
+                        <input type="text" class="form-input" name="role_title" required placeholder="e.g., Senior Software Engineer">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Experience Range *</label>
+                        <input type="text" class="form-input" name="experience_range" required placeholder="e.g., 3-5 years">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Department *</label>
+                        <input type="text" class="form-input" name="department" required placeholder="e.g., Engineering">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location *</label>
+                        <input type="text" class="form-input" name="location" required placeholder="e.g., Bangalore / Remote">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Employment Type *</label>
+                    <input type="text" class="form-input" name="employment_type" required placeholder="e.g., Full-Time">
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h3 class="section-title">🎯 Role Details</h3>
+                <div class="form-group">
+                    <label class="form-label">Key Responsibilities * (one per line)</label>
+                    <textarea class="form-textarea" name="key_responsibilities" required placeholder="Design and develop scalable AI systems
+Lead technical initiatives
+Mentor junior engineers"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Required Skills * (one per line)</label>
+                    <textarea class="form-textarea" name="required_skills" required placeholder="Python, TensorFlow, PyTorch
+5+ years of ML experience
+Strong problem-solving skills"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Additional Notes (optional)</label>
+                    <textarea class="form-textarea" name="additional_info" placeholder="Any specific requirements or notes..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-generate">🚀 Generate Job Description</button>
+        </form>
+
+        <div class="result-section" id="result-section">
+            <div class="result-card">
+                <h2 class="result-title" id="jd-title">Job Description Generated!</h2>
+                <div id="jd-content"></div>
+                <div class="result-actions">
+                    <button class="btn-action" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+                    <button class="btn-action" onclick="downloadJSON()">💾 Download JSON</button>
+                    <button class="btn-action" onclick="createNew()">➕ Create New JD</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Generating Job Description...</div>
+        </div>
+    </div>
+
+    <script>
+        var form = document.getElementById('jd-form');
+        var resultSection = document.getElementById('result-section');
+        var loadingOverlay = document.getElementById('loading-overlay');
+        var jdContent = document.getElementById('jd-content');
+        var jdTitle = document.getElementById('jd-title');
+        var generatedJD = null;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(form);
+            var data = {
+                role_title: formData.get('role_title'),
+                experience_range: formData.get('experience_range'),
+                department: formData.get('department'),
+                location: formData.get('location'),
+                employment_type: formData.get('employment_type'),
+                key_responsibilities: formData.get('key_responsibilities'),
+                required_skills: formData.get('required_skills'),
+                additional_info: formData.get('additional_info') || ''
+            };
+            loadingOverlay.classList.add('active');
+            fetch('/jd-creator/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                loadingOverlay.classList.remove('active');
+                if (data.error) { alert('Error: ' + data.error); }
+                else { generatedJD = data; displayJD(data); }
+            })
+            .catch(function(error) {
+                loadingOverlay.classList.remove('active');
+                alert('Error: ' + error.message);
+            });
+        });
+
+        function displayJD(jd) {
+            jdTitle.textContent = jd.job_title || 'Job Description';
+            var html = '';
+            if (jd.full_text) {
+                html = '<div class="jd-section"><pre style="white-space: pre-wrap; font-family: inherit;">' + jd.full_text + '</pre></div>';
+            } else {
+                html += '<div class="jd-section"><h3>📘 About NeuronIQ AI</h3><p>' + (jd.about_company || '') + '</p></div>';
+                html += '<div class="jd-section"><h3>🧩 Role Overview</h3><p>' + (jd.role_overview || '') + '</p></div>';
+                if (jd.key_responsibilities && jd.key_responsibilities.length > 0) {
+                    html += '<div class="jd-section"><h3>🎯 Key Responsibilities</h3><ul>';
+                    jd.key_responsibilities.forEach(function(r) { html += '<li>' + r + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (jd.required_skills && jd.required_skills.length > 0) {
+                    html += '<div class="jd-section"><h3>🛠️ Required Skills</h3><ul>';
+                    jd.required_skills.forEach(function(s) { html += '<li>' + s + '</li>'; });
+                    html += '</ul></div>';
+                }
+                if (jd.preferred_qualifications && jd.preferred_qualifications.length > 0) {
+                    html += '<div class="jd-section"><h3>📚 Preferred Qualifications</h3><ul>';
+                    jd.preferred_qualifications.forEach(function(p) { html += '<li>' + p + '</li>'; });
+                    html += '</ul></div>';
+                }
+                html += '<div class="jd-section"><h3>📅 Employment Details</h3>';
+                html += '<p><strong>Experience:</strong> ' + (jd.experience_range || '') + '</p>';
+                html += '<p><strong>Department:</strong> ' + (jd.department || '') + '</p>';
+                html += '<p><strong>Location:</strong> ' + (jd.location || '') + '</p>';
+                html += '<p><strong>Type:</strong> ' + (jd.employment_type || '') + '</p></div>';
+                if (jd.why_join_us) {
+                    html += '<div class="jd-section"><h3>🚀 Why Join Us</h3><p>' + jd.why_join_us + '</p></div>';
+                }
+            }
+            jdContent.innerHTML = html;
+            resultSection.classList.add('active');
+            resultSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function copyToClipboard() {
+            var text = jdContent.innerText;
+            navigator.clipboard.writeText(text).then(function() { alert('✅ Copied!'); }).catch(function() { alert('❌ Failed to copy'); });
+        }
+
+        function downloadJSON() {
+            var dataStr = JSON.stringify(generatedJD, null, 2);
+            var dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            var exportFileDefaultName = (generatedJD.job_title || 'job_description').replace(/\s+/g, '_') + '.json';
+            var linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        function createNew() {
+            form.reset();
+            resultSection.classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

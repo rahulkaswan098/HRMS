@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Screening - NeuronIQ AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #141414; color: #ffffff; min-height: 100vh;
+        }
+        .navbar {
+            background: #141414; padding: 20px 4%; border-bottom: 1px solid #2a2a2a;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 1.5rem; color: #e50914; font-weight: 700; }
+        .btn-home {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white; padding: 0.6rem 1.5rem; border-radius: 4px; text-decoration: none;
+            font-weight: 600; transition: all 0.3s;
+        }
+        .btn-home:hover { background: rgba(255, 255, 255, 0.2); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 3rem 4%; }
+        .hero-section { text-align: center; margin-bottom: 3rem; }
+        .hero-section h2 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .hero-section p { color: #808080; font-size: 1.1rem; }
+        .form-card {
+            background: #1f1f1f; border: 1px solid #2a2a2a; border-radius: 12px;
+            padding: 2.5rem; margin-bottom: 2rem;
+        }
+        .section-title {
+            font-size: 1.5rem; font-weight: 700; color: #e50914; margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-label {
+            display: block; font-weight: 600; color: #ffffff; margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .form-textarea {
+            width: 100%; padding: 1rem; background: #0a0a0a; border: 2px solid #2a2a2a;
+            border-radius: 8px; color: #ffffff; font-size: 1rem; font-family: inherit;
+            transition: all 0.3s; min-height: 150px; resize: vertical;
+        }
+        .form-textarea:focus { outline: none; border-color: #e50914; }
+        .form-row {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .form-input {
+            width: 100%; padding: 1rem; background: #0a0a0a; border: 2px solid #2a2a2a;
+            border-radius: 8px; color: #ffffff; font-size: 1rem; transition: all 0.3s;
+        }
+        .form-input:focus { outline: none; border-color: #e50914; }
+        .upload-area {
+            border: 3px dashed #2a2a2a; border-radius: 12px; padding: 3rem;
+            text-align: center; background: #0a0a0a; transition: all 0.3s; cursor: pointer;
+        }
+        .upload-area:hover {
+            border-color: #e50914; background: rgba(229, 9, 20, 0.05);
+        }
+        .upload-area.drag-over {
+            border-color: #46d369; background: rgba(70, 211, 105, 0.1);
+        }
+        .upload-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .upload-text { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .upload-hint { color: #808080; font-size: 0.9rem; }
+        .file-input { display: none; }
+        .selected-files {
+            margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 1rem;
+        }
+        .file-chip {
+            background: rgba(70, 211, 105, 0.2); border: 1px solid #46d369;
+            padding: 0.5rem 1rem; border-radius: 20px; display: flex;
+            align-items: center; gap: 0.5rem; font-size: 0.9rem;
+        }
+        .file-chip .remove { cursor: pointer; color: #e50914; font-weight: bold; }
+        .btn-screen {
+            background: #e50914; border: none; color: white; padding: 1.25rem 3rem;
+            font-size: 1.2rem; font-weight: 700; border-radius: 8px; cursor: pointer;
+            transition: all 0.3s; width: 100%; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-screen:hover {
+            background: #f40612; transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.4);
+        }
+        .btn-screen:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .help-text { color: #808080; font-size: 0.85rem; margin-top: 0.5rem; }
+        .loading-overlay {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.95); z-index: 9999; align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-content { text-align: center; }
+        .spinner {
+            width: 60px; height: 60px; border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #e50914; border-radius: 50%; animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; }
+        .loading-subtext { color: #808080; }
+        @media (max-width: 768px) {
+            .form-card { padding: 1.5rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .hero-section h2 { font-size: 2rem; }
+            .upload-area { padding: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🎯 AI Resume Screening</h1>
+        <a href="/" class="btn-home">← Back to Home</a>
+    </nav>
+
+    <div class="container">
+        <div class="hero-section">
+            <h2>Screen Resumes with AI</h2>
+            <p>Upload resumes and let AI find the best candidates for your role</p>
+        </div>
+
+        <form id="screening-form" enctype="multipart/form-data">
+            <!-- Job Description -->
+            <div class="form-card">
+                <h3 class="section-title">📝 Job Description</h3>
+                <div class="form-group">
+                    <label class="form-label">Paste the full job description *</label>
+                    <textarea class="form-textarea" name="job_description" required
+                        placeholder="Enter the complete job description including required skills, responsibilities, qualifications, and experience level..."></textarea>
+                    <p class="help-text">The more detailed your job description, the better the AI can match candidates</p>
+                </div>
+            </div>
+
+            <!-- Screening Criteria -->
+            <div class="form-card">
+                <h3 class="section-title">🎯 Screening Criteria</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Minimum Experience (years)</label>
+                        <input type="number" class="form-input" name="min_experience" value="0" min="0" placeholder="e.g., 2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Maximum Experience (years)</label>
+                        <input type="number" class="form-input" name="max_experience" value="20" min="0" placeholder="e.g., 10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Preferred Organizations (comma-separated, optional)</label>
+                    <input type="text" class="form-input" name="organizations" placeholder="e.g., Google, Microsoft, Amazon, Meta">
+                    <p class="help-text">Leave empty to consider all organizations equally</p>
+                </div>
+            </div>
+
+            <!-- Resume Upload -->
+            <div class="form-card">
+                <h3 class="section-title">📁 Upload Resumes</h3>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📤</div>
+                    <div class="upload-text">Drag & Drop Resumes Here</div>
+                    <div class="upload-hint">or click to browse (PDF, DOC, DOCX)</div>
+                </div>
+                <input type="file" id="resume-input" class="file-input" name="resumes" accept=".pdf,.doc,.docx" multiple required>
+                <div class="selected-files" id="selected-files"></div>
+            </div>
+
+            <button type="submit" class="btn-screen" id="submit-btn">🚀 Screen Resumes</button>
+        </form>
+    </div>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Analyzing Resumes...</div>
+            <div class="loading-subtext">AI is processing your candidates</div>
+        </div>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('resume-input');
+        const selectedFilesDiv = document.getElementById('selected-files');
+        const form = document.getElementById('screening-form');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const submitBtn = document.getElementById('submit-btn');
+        let selectedFiles = [];
+
+        uploadArea.addEventListener('click', () => { fileInput.click(); });
+        fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); });
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            selectedFiles = Array.from(files);
+            displaySelectedFiles();
+        }
+
+        function displaySelectedFiles() {
+            selectedFilesDiv.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'file-chip';
+                chip.innerHTML = '<span>📄 ' + file.name + '</span><span class="remove" onclick="removeFile(' + index + ')">✕</span>';
+                selectedFilesDiv.appendChild(chip);
+            });
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displaySelectedFiles();
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (selectedFiles.length === 0) {
+                alert('Please upload at least one resume');
+                return;
+            }
+            loadingOverlay.classList.add('active');
+            submitBtn.disabled = true;
+            const formData = new FormData();
+            formData.append('job_description', form.job_description.value);
+            formData.append('min_experience', form.min_experience.value);
+            formData.append('max_experience', form.max_experience.value);
+            formData.append('organizations', form.organizations.value);
+            selectedFiles.forEach(file => { formData.append('resumes', file); });
+            try {
+                const response = await fetch('/screen', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+                if (data.session_id) {
+                    window.location.href = '/results/' + data.session_id;
+                } else {
+                    throw new Error(data.error || 'Unknown error occurred');
+                }
+            } catch (error) {
+                loadingOverlay.classList.remove('active');
+                submitBtn.disabled = false;
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

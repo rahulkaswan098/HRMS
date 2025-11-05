@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screening Results - NeuronIQ AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #141414;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #141414;
+            padding: 20px 4%;
+            border-bottom: 1px solid #2a2a2a;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h1 {
+            font-size: 1.5rem;
+            color: #e50914;
+            font-weight: 700;
+        }
+
+        .download-btns {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: #e50914;
+            border-color: #e50914;
+        }
+
+        .btn-primary:hover {
+            background: #f40612;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1f1f1f 0%, #0a0a0a 100%);
+            padding: 4rem 4%;
+            text-align: center;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #e50914;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            color: #d2d2d2;
+        }
+
+        .match-score-hero {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #46d369;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 4%;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .candidate-count {
+            color: #808080;
+            font-size: 1.1rem;
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .candidate-card {
+            background: #1f1f1f;
+            border: 2px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .candidate-card:hover {
+            border-color: #e50914;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(229, 9, 20, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .rank-badge {
+            background: #e50914;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .match-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #46d369;
+        }
+
+        .candidate-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .candidate-role {
+            color: #d2d2d2;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .candidate-company {
+            color: #808080;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .candidate-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding-top: 1.5rem;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            color: #808080;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(70, 211, 105, 0.2);
+            border: 1px solid #46d369;
+            color: #46d369;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+
+        .recommendation {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .recommendation.STRONG_FIT {
+            background: rgba(70, 211, 105, 0.2);
+            border: 1px solid #46d369;
+            color: #46d369;
+        }
+
+        .recommendation.GOOD_FIT {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid #ffc107;
+            color: #ffc107;
+        }
+
+        .recommendation.MODERATE_FIT {
+            background: rgba(255, 152, 0, 0.2);
+            border: 1px solid #ff9800;
+            color: #ff9800;
+        }
+
+        .recommendation.WEAK_FIT {
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #e50914;
+        }
+
+        .view-report-btn {
+            width: 100%;
+            background: #e50914;
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .view-report-btn:hover {
+            background: #f40612;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .candidates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .download-btns {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <h1>🎯 AI Resume Screening</h1>
+        <div class="download-btns">
+            <a href="/download/excel/{{ session_id }}" class="btn">📊 Excel</a>
+            <a href="/download/json/{{ session_id }}" class="btn">💾 JSON</a>
+            <a href="/" class="btn btn-primary">← Back to Home</a>
+        </div>
+    </nav>
+
+    {% if results.top_candidate %}
+    <section class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">🏆 TOP MATCH</span>
+            <h1 class="hero-title">{{ results.top_candidate.name }}</h1>
+            
+            <div class="hero-meta">
+                <span class="match-score-hero">{{ results.top_candidate.match_score }}% Match</span>
+                <span>{{ results.top_candidate.experience_years }} Years</span>
+                <span>{{ results.top_candidate.current_role }}</span>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">All Candidates</h2>
+            <span class="candidate-count">{{ results.total_candidates }} candidates screened</span>
+        </div>
+
+        <div class="candidates-grid">
+            {% for candidate in results.candidates %}
+            <div class="candidate-card" onclick="window.location.href='/candidate-report/{{ session_id }}/{{ loop.index0 }}'">
+                <div class="card-header">
+                    <div class="rank-badge">#{{ loop.index }}</div>
+                    <div class="match-score">{{ candidate.match_score }}%</div>
+                </div>
+
+                <h3 class="candidate-name">{{ candidate.name }}</h3>
+                <p class="candidate-role">{{ candidate.current_role }}</p>
+                <p class="candidate-company">{{ candidate.current_company }}</p>
+
+                <div class="candidate-details">
+                    <div class="detail-item">
+                        <span class="detail-label">Experience</span>
+                        <span class="detail-value">{{ candidate.experience_years }} years</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Education</span>
+                        <span class="detail-value">{{ candidate.education }}</span>
+                    </div>
+                </div>
+
+                <div class="skills-list">
+                    {% for skill in candidate.skills[:5] %}
+                    <span class="skill-tag">{{ skill }}</span>
+                    {% endfor %}
+                    {% if candidate.skills|length > 5 %}
+                    <span class="skill-tag">+{{ candidate.skills|length - 5 }} more</span>
+                    {% endif %}
+                </div>
+
+                <div class="recommendation {{ candidate.recommendation }}">
+                    {{ candidate.recommendation.replace('_', ' ') }}
+                </div>
+
+                <button class="view-report-btn">View Detailed Report →</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

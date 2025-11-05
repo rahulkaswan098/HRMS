@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuronIQ AI - HR Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #141414;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background: #141414;
+            padding: 20px 4%;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .navbar h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #e50914 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 4% 2rem;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #808080;
+            margin-bottom: 3rem;
+        }
+
+        .profiles-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 4% 4rem;
+        }
+
+        .profiles-title {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: #ffffff;
+        }
+
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .profile-card {
+            background: #1f1f1f;
+            border: 2px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-card:hover {
+            border-color: #e50914;
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(229, 9, 20, 0.4);
+        }
+
+        .profile-icon {
+            background: linear-gradient(135deg, #1f1f1f 0%, #2a2a2a 100%);
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            min-height: 200px;
+        }
+
+        .profile-card:hover .profile-icon {
+            background: linear-gradient(135deg, #e50914 0%, #831010 100%);
+        }
+
+        .profile-content {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #ffffff;
+        }
+
+        .profile-description {
+            color: #808080;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .profile-badge {
+            display: inline-block;
+            background: rgba(229, 9, 20, 0.2);
+            border: 1px solid #e50914;
+            color: #e50914;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .gdpr-footer {
+            margin-top: auto;
+            background: #0a0a0a;
+            padding: 2rem 4%;
+            text-align: center;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .gdpr-footer p {
+            color: #808080;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .gdpr-footer strong {
+            color: #46d369;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .profiles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-icon {
+                font-size: 4rem;
+                min-height: 150px;
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>🧠 NeuronIQ AI - HR Platform</h1>
+    </nav>
+
+    <section class="hero-section">
+        <h1 class="hero-title">Who's Using the Platform?</h1>
+        <p class="hero-subtitle">Select the feature you need</p>
+    </section>
+
+    <div class="profiles-container">
+        <h2 class="profiles-title">Choose Your Tool</h2>
+        
+        <div class="profiles-grid">
+            <!-- GDPR Chatbot -->
+            <a href="/gdpr-chatbot" class="profile-card">
+                <div class="profile-icon">🔒</div>
+                <div class="profile-content">
+                    <h3 class="profile-name">GDPR Compliance Chatbot</h3>
+                    <p class="profile-description">
+                        Get instant answers about GDPR compliance, HR regulations, and AI ethics. 
+                        Powered by official EU 2016/679 documentation.
+                    </p>
+                    <span class="profile-badge">AI-Powered • RAG</span>
+                </div>
+            </a>
+
+            <!-- JD Creator -->
+            <a href="/jd-creator" class="profile-card">
+                <div class="profile-icon">📝</div>
+                <div class="profile-content">
+                    <h3 class="profile-name">Job Description Creator</h3>
+                    <p class="profile-description">
+                        Generate professional, structured job descriptions in seconds. 
+                        Tailored to NeuronIQ AI's tone and company culture.
+                    </p>
+                    <span class="profile-badge">AI-Generated • Professional</span>
+                </div>
+            </a>
+
+            <!-- Resume Screening -->
+            <a href="/screening" class="profile-card">
+                <div class="profile-icon">🎯</div>
+                <div class="profile-content">
+                    <h3 class="profile-name">AI Resume Screening</h3>
+                    <p class="profile-description">
+                        Screen multiple resumes with AI-powered matching. 
+                        Get detailed analysis, rankings, and export reports.
+                    </p>
+                    <span class="profile-badge">Intelligent Matching • Fast</span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer class="gdpr-footer">
+        <p>
+            🔒 <strong>GDPR Compliant</strong> - Your data is safe with us
+        </p>
+        <p style="font-size: 0.85rem; color: #606060; margin-top: 0.5rem;">
+            All data is processed securely and deleted after use. No permanent storage.
+        </p>
+        <p style="margin-top: 1rem; color: #505050; font-size: 0.8rem;">
+            © 2025 NeuronIQ AI | Built with Privacy in Mind
+        </p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,128 @@
+# ==============================================
+# Python
+# ==============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ==============================================
+# Virtual Environments
+# ==============================================
+venv/
+env/
+ENV/
+.venv
+
+# ==============================================
+# Environment Variables (CRITICAL - NEVER COMMIT!)
+# ==============================================
+.env
+.env.local
+.env.*.local
+
+# ==============================================
+# Project Specific Folders
+# ==============================================
+# User uploaded files
+uploads/
+
+# Generated outputs
+outputs/
+
+# Vector database
+gdpr_chroma/
+
+# Logs
+logs/
+*.log
+
+# ==============================================
+# IDE and Editors
+# ==============================================
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# ==============================================
+# Operating System Files
+# ==============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ==============================================
+# Flask
+# ==============================================
+instance/
+.webassets-cache
+flask_session/
+
+# ==============================================
+# Testing and Coverage
+# ==============================================
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# ==============================================
+# Database Files
+# ==============================================
+*.db
+*.sqlite
+*.sqlite3
+
+# ==============================================
+# Secrets and Credentials (NEVER COMMIT!)
+# ==============================================
+*.pem
+*.key
+*.cert
+secrets.yaml
+credentials.json
+
+# ==============================================
+# Temporary Files
+# ==============================================
+*.tmp
+*.bak
+*.backup
+tmp/
+temp/
+
+# ==============================================
+# Compressed Files
+# ==============================================
+*.zip
+*.tar.gz
+*.rar
