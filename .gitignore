@@ -110,7 +110,6 @@ htmlcov/
 *.cert
 secrets.yaml
 credentials.json
-config.py
 
 # ==============================================
 # Temporary Files
