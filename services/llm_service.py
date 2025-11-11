@@ -1,17 +1,14 @@
 import json
-from typing import List, Dict, Optional
+from typing import List, Dict
 import openai
 import config
 
 class LLMService:
-    """Service for interacting with Azure OpenAI for resume analysis"""
+    """Service for interacting with OpenAI for resume analysis"""
     
     def __init__(self):
-        openai.api_type = "azure"
-        openai.api_base = config.AZURE_OPENAI_ENDPOINT
-        openai.api_key = config.AZURE_OPENAI_API_KEY
-        openai.api_version = config.AZURE_API_VERSION
-        self.deployment = config.AZURE_OPENAI_DEPLOYMENT
+        openai.api_key = config.OPENAI_API_KEY
+        self.model = "gpt-3.5-turbo"
     
     def analyze_resume(self, resume_text: str, job_description: str,
                       min_experience: int = 0, max_experience: int = 20,
@@ -61,7 +58,7 @@ Be objective and thorough. Match score should reflect:
 
         try:
             response = openai.ChatCompletion.create(
-                engine=self.deployment,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are an expert HR recruiter analyzing resumes."},
                     {"role": "user", "content": prompt}
@@ -100,8 +97,7 @@ Be objective and thorough. Match score should reflect:
                 }
                 
                 for field, default in required_fields.items():
-                    if field not in result:
-                        result[field] = default
+                    result.setdefault(field, default)
                 
                 return result
                 
@@ -176,7 +172,7 @@ provide their details. If it asks for recommendations, suggest the best matches.
 
         try:
             response = openai.ChatCompletion.create(
-                engine=self.deployment,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are a helpful HR assistant."},
                     {"role": "user", "content": prompt}

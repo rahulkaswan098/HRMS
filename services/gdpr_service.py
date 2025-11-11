@@ -71,14 +71,11 @@ if len(collection.get()["ids"]) == 0:
 # MAIN GDPR CHATBOT SERVICE
 # ----------------------------------------------------------
 class GDPRChatbotService:
-    """GDPR & AI in HR Chatbot using Azure OpenAI and Chroma DB"""
+    """GDPR & AI in HR Chatbot using OpenAI and Chroma DB"""
 
     def __init__(self):
-        openai.api_type = "azure"
-        openai.api_base = config.AZURE_OPENAI_ENDPOINT
-        openai.api_key = config.AZURE_OPENAI_API_KEY
-        openai.api_version = config.AZURE_API_VERSION
-        self.deployment = config.AZURE_OPENAI_DEPLOYMENT
+        openai.api_key = config.OPENAI_API_KEY
+        self.model = "gpt-3.5-turbo"
 
     def _retrieve_context(self, query, top_k=3):
         """Retrieve relevant chunks from Chroma DB"""
@@ -105,7 +102,7 @@ Always cite relevant GDPR Articles and explain in simple language.
 """
 
             response = openai.ChatCompletion.create(
-                engine=self.deployment,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are a GDPR compliance assistant for AI systems in HR."},
                     {"role": "user", "content": prompt}

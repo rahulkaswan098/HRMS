@@ -6,11 +6,8 @@ class JDGeneratorService:
     """NeuronIQ AI – Job Description Creator"""
 
     def __init__(self):
-        openai.api_type = "azure"
-        openai.api_base = config.AZURE_OPENAI_ENDPOINT
-        openai.api_key = config.AZURE_OPENAI_API_KEY
-        openai.api_version = config.AZURE_API_VERSION
-        self.deployment = config.AZURE_OPENAI_DEPLOYMENT
+        openai.api_key = config.OPENAI_API_KEY
+        self.model = "gpt-3.5-turbo"
 
     def generate_jd(self, role_title, experience_range, department, location, employment_type, key_responsibilities, required_skills, additional_info=""):
         """
@@ -71,7 +68,7 @@ Return the JD as valid JSON with this structure:
 
         try:
             response = openai.ChatCompletion.create(
-                engine=self.deployment,
+                model=self.model,
                 messages=[
                     {"role": "system", "content": "You are a professional HR assistant at NeuronIQ AI."},
                     {"role": "user", "content": prompt}
